@@ -18,6 +18,9 @@ knitr::opts_chunk$set(results = "asis", warning = FALSE, message = FALSE)
 
 # Turn off scientific notation
 options(scipen = 999, expressions = 10000)
+
+# Load relevant packages
+library(readr)
 ```
 
 # Section 1: Executive Summary
@@ -45,9 +48,9 @@ The idea behind this exploratory analysis is to provide the platform for a class
 ## Data
 The data comes from the data.gov.uk website [here](https://data.gov.uk/dataset/f36669c1-fe1f-4cbc-803c-db49675247c3/road-collision-casualties-in-camden).
 
-
-```{r cars}
-summary(cars)
+Note, as this is published to the public and from inspection, this data is already in a *tidy* format so little wrangling needs to be done.
+```{r (HIDE) Data Preparation, echo = FALSE, include = FALSE}
+data_roadcasualties <- read_csv(file = "data/Road_Collision_Casualties_In_Camden.csv")
 ```
 
 ## Including Plots
