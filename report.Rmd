@@ -33,11 +33,21 @@ plot_theme <- theme(plot.title = element_text(face = "bold", hjust = 0.5),
 ```
 
 # Section 1: Executive Summary
+In the exploratory analysis to follow, we found:
+
+1. Of those with a road casualty, if they were a man, then they were more likely to have been travelling via a *Powered 2-wheeler* whereas a woman would have more likely been a `Pedestrian`.
+1. Continuing with this analysis of sex, the general age-(interquartile-)range for men was higher for fatal incidences of road casualty than women, though men did display a lower average age for *Fatal* and *Serious* casualties. 
+1. From the *Fatal* and *Serious* incidences of casaulty, the *Driver/Rider* and *Pedestrians* were more likely to suffer these than a *Passenger* would. This could be for a variety of reasons, and also corroborates point (1.) earlier.
+1. In terms of the time period and which days casualties are most likely to take place, with the exception of Friday and the weekend, casualties typically happen during the rush hour period after work.
+1. Casting attention to the location of these fatal or serious casualties, most of them take place in the bottom centre of the Camden Borough of London. These aligns with the main throughfare of British Museum, British Library and Great Ormond Street hospital.
+1. Looking at the impact of the weather, it does not seem to have impacted the casualties too much as most casualties took place in *Fine* weather where there was *Daylight*.
+
+Moving forward, can apply data science techniques such as **K-Nearest Neighbour** or **Logistic Regression** to understand the groups of people more likely to be at risk of casualties and to appreciate the factors that can increase the chances of casualties occurring.
 
 # Section 2: Background
 
 ## Introduction
-The purpose of this project is to explore the road casualty data publicly available for the London borough of Camden.
+The purpose of this project is to explore the road casualty data publicly available for the London Borough of Camden.
 
 ## Motivation
 By exploring the data, we hope to identify and understand the following:
@@ -52,10 +62,12 @@ By exploring the data, we hope to identify and understand the following:
 
 1. **How** these casualties take place, including weather conditions
 
-The idea behind this exploratory analysis is to provide the platform for a classification model to be built to better understand who, what, when, where and how these casualties take place so more effective campaigns can be delivered by the local council to reduce casualties as well as identifying *hotspots* for where casualties most likely happen so that work such as building works to improve the roads, can be done by the council.
+The idea behind this exploratory analysis is to provide the platform for a algorithm to be applied to better understand who, what, when, where and how these casualties take place so more effective campaigns can be delivered by the local council to reduce casualties as well as identifying *hotspots* for where casualties most likely happen so that work such as infrastructure builds to improve the roads, can be done by the council.
 
 ## Data
-The data comes from the data.gov.uk website [here](https://data.gov.uk/dataset/f36669c1-fe1f-4cbc-803c-db49675247c3/road-collision-casualties-in-camden).
+The data for road casualties comes from the data.gov.uk website [here](https://data.gov.uk/dataset/f36669c1-fe1f-4cbc-803c-db49675247c3/road-collision-casualties-in-camden).
+
+The data for mapping the London Borough of Camden comes from Camden council's open data portal [here](https://opendata.camden.gov.uk/Maps/Camden-Ward-Boundary/yqyi-6agf).
 
 This is open data as signalled by it being publicly available and having the open data license. 
 
@@ -160,12 +172,12 @@ In this part, we will look at the times and days that these casualties take plac
 
 Looking at the plots below for each day, we learn that casulaties happen most likely around the periods:
 
-- **Monday**: it's around rush hour going to work time,
+- **Monday**: it's around rush hour going to work time.
 - **Tuesday**: it's around rush hour going home time,
-- **Wednesday**: it's around the same but more accidents overall compared to previous two days
-- **Thursday** again around home time and less casualties than Wednesday
-- **Friday**: around late evening as people go out to club and drink (possibly this is where expect most casualties overall
-- **Saturday and Sunday**: is calmer, especially on Saturday morning as people nurse hangover.
+- **Wednesday**: it's around the same but more accidents overall compared to previous two days.
+- **Thursday** again around home time and less casualties than Wednesday.
+- **Friday**: around late evening as people go out to club and drink (possibly this is where expect most casualties overall).
+- **Saturday and Sunday**: is calmer, especially on Saturday morning.
 
 ```{r (SHOW) When do these casualties occur - time-series, echo = FALSE}
 data_temp <- data_casualty %>% 
@@ -174,7 +186,7 @@ data_temp <- data_casualty %>%
 ggplot(data = data_temp, mapping = aes(x = Time, colour = Day)) +
   geom_freqpoly(binwidth = 0.1, show.legend = FALSE) +
   facet_wrap(facets = vars(Day)) +
-  labs(title = "Line-Chart: Casualties across Days and Time",
+  labs(title = "Line-Chart: Fatal Or Severe Casualties across Days and Time",
        x = "Time during the day",
        y = "Count of casualties") +
   plot_theme
@@ -200,7 +212,7 @@ ggplot() +
 ## How did these casualties take place?
 In this section, will explore possible factors that can cause these casualties to occur.
 
-One suspects that Weather and RoadSurface intrinsically related so not going to include both together in analysis to avoid double-counting.
+One suspects that `Weather` and `RoadSurface` are intrinsically related so we will not include both together in analysis to avoid double-counting.
 
 From the plot below, the highest proportion of those suffering from **fatal** or **Serious** casualties went through *Fine* conditions during *Daylight* which corrobarates with what we found on all days except for Friday when the peak period when people would suffer from a casualty is after work during the rush hour back home.
 
@@ -216,15 +228,17 @@ ggplot(data = data_temp, mapping = aes(x = Weather, y = Proportion, fill = Light
             size = 3) + 
   scale_y_continuous(labels = scales::percent) +
   labs(title = "Proportion of Fatal or Serious Casualties \nby Weather and Light Band Condition") +
-  plot_theme
+  plot_theme +
+  # add text-wrapping for x labels
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
 ```
 
 # Section 4: Conclusions
 Following from the exploratory analysis, we found:
 
-1. Of those with a road casualty, if they were a man, then they were more likely to have been travelling via a *Powered 2-wheeler* whereas a woman would have more likely been a pedestrian.
+1. Of those with a road casualty, if they were a man, then they were more likely to have been travelling via a *Powered 2-wheeler* whereas a woman would have more likely been a `Pedestrian`.
 1. Continuing with this analysis of sex, the general age-(interquartile-)range for men was higher for fatal incidences of road casualty than women, though men did display a lower average age for *Fatal* and *Serious* casualties. 
-1. From the *Fatal* and *Serious* incidences of casaulty, the *Driver/Rider* and *Pedestrians* were more likely to suffer these than a *Passenger* would. This could be for a varity of reasons This corroborates point (1.) earlier.
+1. From the *Fatal* and *Serious* incidences of casaulty, the *Driver/Rider* and *Pedestrians* were more likely to suffer these than a *Passenger* would. This could be for a variety of reasons, and also corroborates point (1.) earlier.
 1. In terms of the time period and which days casualties are most likely to take place, with the exception of Friday and the weekend, casualties typically happen during the rush hour period after work.
 1. Casting attention to the location of these fatal or serious casualties, most of them take place in the bottom centre of the Camden Borough of London. These aligns with the main throughfare of British Museum, British Library and Great Ormond Street hospital.
 1. Looking at the impact of the weather, it does not seem to have impacted the casualties too much as most casualties took place in *Fine* weather where there was *Daylight*.
@@ -239,7 +253,7 @@ To take this analysis further, enough variables have been covered to provide a g
 - PedestrianMovement
 - ModeOfTravel
 
-Even more powerful is building a predictive model such as a multi-linear regression or a random forest to understand the impacts the following variables can have on road casualty:
+Even more powerful is building a predictive model such as a logistic regression or a random forest to understand the impacts the following variables can have on road casualty:
 
 - ModeOfTravel
 - NumberofVehicles
