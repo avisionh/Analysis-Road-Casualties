@@ -115,7 +115,7 @@ data_temp %>%
   pander()
 ```
 
-```{r (HIDE) What types of casulaties - words, include = FALSE, echo = FALSE}
+```{r (HIDE) What types of casualties - words, include = FALSE, echo = FALSE}
 data_temp <- data_temp %>% 
   filter(CasualtyClass %in% c("1 Driver/Rider", "3 Pedestrian") & CasualtySeverity %in% c("1 Fatal", "2 Serious")) %>% 
   group_by(CasualtyClass) %>% 
@@ -143,5 +143,28 @@ if (txt_driver > txt_pedestrian) {
 In total, there are `r toString(txt_driver)` *Driver/Rider* people who either experienced a *fatal* or *serious* casualty. This figure was `r toString(txt_pedestrian)` for *Pedestrian*s. Therefore, there were `r toString(txt_compare)` *Driver/Rider* *fatal*/*serious* casualties relative to *Pedestrians*.
 
 
-### When do these casualties most frequent occur?
+### When do these casualties most frequently occur?
+In this part, we will look at the times and days that these casualties take place so we can understand what days and times are most likely to yield a casualty and thereby allowing the emergency services in the council to respond approrpriately.
+
+Looking at the plots below for each day, we learn that casulaties happen most likely around the periods:
+
+- **Monday**: it's around rush hour going to work time,
+- **Tuesday**: it's around rush hour going home time,
+- **Wednesday**: it's around the same but more accidents overall compared to previous two days
+- **Thursday** again around home time and less casualties than Wednesday
+- **Friday**: around late evening as people go out to club and drink (possibly this is where expect most casualties overall
+- **Saturday and Sunday**: is calmer, especially on Saturday morning as people nurse hangover.
+
+```{r (SHOW) When do these casualties occur - time-series, echo = FALSE}
+data_temp <- data_casualty %>% 
+  filter(CasualtyClass %in% c("1 Driver/Rider", "3 Pedestrian") & CasualtySeverity %in% c("1 Fatal", "2 Serious")) 
+
+ggplot(data = data_temp, mapping = aes(x = Time, colour = Day)) +
+  geom_freqpoly(binwidth = 0.1, show.legend = FALSE) +
+  facet_wrap(facets = vars(Day)) +
+  labs(title = "Line-Chart: Casualties across Days and Time",
+       x = "Time during the day",
+       y = "Count ") +
+  plot_theme
+```
 
