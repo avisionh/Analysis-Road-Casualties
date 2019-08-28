@@ -63,9 +63,9 @@ source("scripts/0_data_wrangle.R")
 source("scripts/3_4_analysis_where.R")
 ```
 
-## Section 3: Analysis
+# Section 3: Analysis
 
-### Who are most involved in road casualties?
+## Who are most involved in road casualties?
 We will begin by exploring the charateristics of those people who were involved in road casualties.
 
 ```{r (SHOW) Who are involved, echo = FALSE}
@@ -76,7 +76,7 @@ plot_base <- ggplot(data = data_casualty, mapping = aes(x = ModeOfTravel, fill =
   scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
 ```
 
-From the bar-chart below, we see that *men* are involved in casualties relating to *Powered 2-wheeler* whereas *women* are involved in casualties
+From the bar-chart below, we see that *men* are involved in casualties relating to *Powered 2-wheeler* whereas *women* are more involved in *Pedestrian* casualties.
 
 ```{r (SHOW) Who are involved - mode of travel, echo = FALSE}
 plot_base +
@@ -88,7 +88,7 @@ plot_base +
 
 Let's drill-down further as we have age related information in the dataset.
 
-What we see in the box-plot is that for *fatal* casualties, they tend to be male who are younger than their female counterparts, on average. Yet the range of ages of male involved in a *fatal* road casualty is higher than their female counterparts - this is opposite to what we see in the *serious* road casualty severity.
+What we see in the box-plot is that for *fatal* casualties, they tend to be male who are younger than their female counterparts, on average. Yet the (interquartile-) range of ages of males involved in a *fatal* road casualty is higher than their female counterparts - this is opposite to what we see in the *serious* road casualty severity. Though in both cases, the average age for males is lower than the females.
 
 ```{r (SHOW) Who are involved - age, echo = FALSE}
 ggplot(data = data_casualty, mapping = aes(x = CasualtySeverity, y = CasualtyAge, fill = CasualtySex)) +
@@ -99,7 +99,7 @@ ggplot(data = data_casualty, mapping = aes(x = CasualtySeverity, y = CasualtyAge
   plot_theme
 ```
 
-### What types of casualties are most frequent?
+## What types of casualties are most frequent?
 We will now investigate what types of casualties are most frequent so we can understand the actual end-product which impacts on casualties. For instance, if cars were the most likely cause behind the casualties, then would recommend avoiding driving in a public safety campaign.
 
 From the table below, we see that for the *serious* and *fatal* severity casualties, the most frequent cases of these were from:
@@ -144,7 +144,7 @@ if (txt_driver > txt_pedestrian) {
 In total, there are `r toString(txt_driver)` *Driver/Rider* people who either experienced a *fatal* or *serious* casualty. This figure was `r toString(txt_pedestrian)` for *Pedestrian*s. Therefore, there were `r toString(txt_compare)` *Driver/Rider* *fatal*/*serious* casualties relative to *Pedestrians*.
 
 
-### When do these casualties most frequently occur?
+## When do these casualties most frequently occur?
 In this part, we will look at the times and days that these casualties take place so we can understand what days and times are most likely to yield a casualty and thereby allowing the emergency services in the council to respond approrpriately.
 
 Looking at the plots below for each day, we learn that casulaties happen most likely around the periods:
@@ -169,7 +169,7 @@ ggplot(data = data_temp, mapping = aes(x = Time, colour = Day)) +
   plot_theme
 ```
 
-### Where are these road casualties taking place?
+## Where are these road casualties taking place?
 In this section, will visualise where the road casualties take place in Camden so one can identify hotpots of casualties that may need thorough investigation into.
 
 What we have below shows that down the centre of Camden, we have a higher concentration of casualties, suggesting more densely populated areas with drivers/riders and pedestrians.
@@ -186,7 +186,7 @@ ggplot() +
   theme_bare
 ```
 
-### How did these casualties take place?
+## How did these casualties take place?
 In this section, will explore possible factors that can cause these casualties to occur.
 
 One suspects that Weather and RoadSurface intrinsically related so not going to include both together in analysis to avoid double-counting.
@@ -208,3 +208,35 @@ ggplot(data = data_temp, mapping = aes(x = Weather, y = Proportion, fill = Light
   plot_theme
 ```
 
+# Section 4: Conclusions
+Following from the exploratory analysis, we found:
+
+1. Of those with a road casualty, if they were a man, then they were more likely to have been travelling via a *Powered 2-wheeler* whereas a woman would have more likely been a pedestrian.
+1. Continuing with this analysis of sex, the general age-(interquartile-)range for men was higher for fatal incidences of road casualty than women, though men did display a lower average age for *Fatal* and *Serious* casualties. 
+1. From the *Fatal* and *Serious* incidences of casaulty, the *Driver/Rider* and *Pedestrians* were more likely to suffer these than a *Passenger* would. This could be for a varity of reasons This corroborates point (1.) earlier.
+1. In terms of the time period and which days casualties are most likely to take place, with the exception of Friday and the weekend, casualties typically happen during the rush hour period after work.
+1. Casting attention to the location of these fatal or serious casualties, most of them take place in the bottom centre of the Camden Borough of London. These aligns with the main throughfare of British Museum, British Library and Great Ormond Street hospital.
+1. Looking at the impact of the weather, it does not seem to have impacted the casualties too much as most casualties took place in *Fine* weather where there was *Daylight*.
+
+## Next Steps
+To take this analysis further, enough variables have been covered to provide a good starting point for choosing variables to include in a classification model to understand the groups of people more at risk of road casualties in the London Borough of Camden. These variables can be:
+
+- CasualtyClass
+- CasualtySex
+- CasualtyAgeBand/CasualtyAge
+- PedestrianLocation
+- PedestrianMovement
+- ModeOfTravel
+
+Even more powerful is building a predictive model such as a multi-linear regression or a random forest to understand the impacts the following variables can have on road casualty:
+
+- ModeOfTravel
+- NumberofVehicles
+- Day
+- Time
+- Road Type
+- Speed Limit
+- LightConditionBand
+- Weather
+- Weather (though likely to be highly correlated with RoadSurface, so worth only including one of these only)
+- RoadSurface
