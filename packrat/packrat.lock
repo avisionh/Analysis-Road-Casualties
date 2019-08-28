@@ -100,8 +100,9 @@ Hash: f147621f72b561485bfffcae78c4f5d5
 Package: ggplot2
 Source: CRAN
 Version: 3.2.1
-Requires: digest, gtable, lazyeval, rlang, viridisLite, withr, scales,
-    reshape2, tibble
+Requires: digest, gtable, lazyeval, reshape2, rlang, scales, tibble,
+    viridisLite, withr
+Hash: 7cf3f9df0089475f133ec23befca1032
 
 Package: glue
 Source: CRAN
@@ -111,6 +112,7 @@ Hash: 660bbbe3803c7cf7c9489a7d99a9c0ed
 Package: gtable
 Source: CRAN
 Version: 0.3.0
+Hash: a9e7b0666eb933a0cb36779240b4462e
 
 Package: highr
 Source: CRAN
@@ -148,6 +150,7 @@ Hash: ecf589b42cd284b03a4beb9665482d3e
 Package: lazyeval
 Source: CRAN
 Version: 0.2.2
+Hash: 563563691bea3cde6945a98996d7c166
 
 Package: magrittr
 Source: CRAN
@@ -179,7 +182,7 @@ Hash: 6ad605ba7b4b476d84be6632393f5765
 Package: pillar
 Source: CRAN
 Version: 1.4.2
-Requires: crayon, fansi, rlang, utf8, cli, vctrs
+Requires: cli, crayon, fansi, rlang, utf8, vctrs
 Hash: 28ff1862b4e0c8761efca442e80a63d8
 
 Package: pkgconfig
@@ -214,6 +217,7 @@ Package: reshape2
 Source: CRAN
 Version: 1.4.3
 Requires: Rcpp, plyr, stringr
+Hash: b7ea8a2e7a9df39c2346e78bd83e26f8
 
 Package: rlang
 Source: CRAN
@@ -236,7 +240,8 @@ Hash: a25c3f70c166fb3fbabc410eb32b6366
 Package: scales
 Source: CRAN
 Version: 1.0.0
-Requires: R6, RColorBrewer, Rcpp, labeling, viridisLite, munsell
+Requires: R6, RColorBrewer, Rcpp, labeling, munsell, viridisLite
+Hash: f4f1b13b6774ee3122a36466d1bc50b8
 
 Package: stringi
 Source: CRAN
@@ -252,7 +257,7 @@ Hash: 67da32dbb2a7a16f2ef124336358e54a
 Package: tibble
 Source: CRAN
 Version: 2.1.3
-Requires: crayon, fansi, pkgconfig, rlang, cli, pillar
+Requires: cli, crayon, fansi, pillar, pkgconfig, rlang
 Hash: f59680d81ddc45fa3fcb8c07686d1d89
 
 Package: tidyselect
@@ -275,16 +280,18 @@ Hash: f3f97ce59092abc8ed3fd098a59e236c
 Package: vctrs
 Source: CRAN
 Version: 0.2.0
-Requires: backports, digest, glue, rlang, zeallot, ellipsis
+Requires: backports, digest, ellipsis, glue, rlang, zeallot
 Hash: daf77cb3dbcacd7fb619cb3748dc215f
 
 Package: viridisLite
 Source: CRAN
 Version: 0.3.0
+Hash: 78bb072c4f9e729a283d4c40ec93f9c6
 
 Package: withr
 Source: CRAN
 Version: 2.1.2
+Hash: d534108bcd5f34ec73e9eb523751ba20
 
 Package: xfun
 Source: CRAN

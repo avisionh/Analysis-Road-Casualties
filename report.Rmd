@@ -16,11 +16,20 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(results = "asis", warning = FALSE, message = FALSE)
 
+# Load packages
+library(dplyr)
+library(ggplot2)
+library(pander)
+
 # Turn off scientific notation
 options(scipen = 999, expressions = 10000)
 
-# Load relevant packages
-library(readr)
+# Set theme for plots
+plot_theme <- theme(plot.title = element_text(face = "bold", hjust = 0.5),
+                    plot.subtitle = element_text(face = "bold", hjust = 0.5),
+                    panel.background = element_blank(),
+                    axis.line = element_line(color = "black"))
+
 ```
 
 # Section 1: Executive Summary
@@ -50,15 +59,152 @@ The data comes from the data.gov.uk website [here](https://data.gov.uk/dataset/f
 
 Note, as this is published to the public and from inspection, this data is already in a *tidy* format so little wrangling needs to be done.
 ```{r (HIDE) Data Preparation, echo = FALSE, include = FALSE}
-data_roadcasualties <- read_csv(file = "data/Road_Collision_Casualties_In_Camden.csv")
+source("scripts/0_data_wrangle.R")
+source("scripts/3_4_analysis_where.R")
 ```
 
-## Including Plots
+## Section 3: Analysis
 
-You can also embed plots, for example:
+### Who are most involved in road casualties?
+We will begin by exploring the charateristics of those people who were involved in road casualties.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r (SHOW) Who are involved, echo = FALSE}
+plot_base <- ggplot(data = data_casualty, mapping = aes(x = ModeOfTravel, fill = CasualtySex)) +
+  labs(x = "Mode of Travel") +
+  plot_theme +
+  # add text-wrapping for x labels
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+From the bar-chart below, we see that *men* are involved in casualties relating to *Powered 2-wheeler* whereas *women* are involved in casualties
+
+```{r (SHOW) Who are involved - mode of travel, echo = FALSE}
+plot_base +
+  geom_bar(position = position_dodge()) +
+  labs(title = "Bar-Chart: Count of Road Casualties", 
+       subtitle = "by Mode of Travel and Sex",
+       y = "Count of casualties")
+```
+
+Let's drill-down further as we have age related information in the dataset.
+
+What we see in the box-plot is that for *fatal* casualties, they tend to be male who are younger than their female counterparts, on average. Yet the range of ages of male involved in a *fatal* road casualty is higher than their female counterparts - this is opposite to what we see in the *serious* road casualty severity.
+
+```{r (SHOW) Who are involved - age, echo = FALSE}
+ggplot(data = data_casualty, mapping = aes(x = CasualtySeverity, y = CasualtyAge, fill = CasualtySex)) +
+  geom_boxplot() +
+  labs(title = "Box-Plot: Severity of Casualty by Age",
+       x = "Severity of Casualty",
+       y = "Age of person involved in casualty") + 
+  plot_theme
+```
+
+### What types of casualties are most frequent?
+We will now investigate what types of casualties are most frequent so we can understand the actual end-product which impacts on casualties. For instance, if cars were the most likely cause behind the casualties, then would recommend avoiding driving in a public safety campaign.
+
+From the table below, we see that for the *serious* and *fatal* severity casualties, the most frequent cases of these were from:
+
+- Driver/Rider
+- Pedestrian
+
+```{r (SHOW) What types of casualties - table, echo = FALSE}
+data_temp <- data_casualty %>% 
+  group_by(CasualtySeverity, CasualtyClass) %>% 
+  summarise(Total = n()) 
+
+data_temp %>% 
+  pander()
+```
+
+```{r (HIDE) What types of casualties - words, include = FALSE, echo = FALSE}
+data_temp <- data_temp %>% 
+  filter(CasualtyClass %in% c("1 Driver/Rider", "3 Pedestrian") & CasualtySeverity %in% c("1 Fatal", "2 Serious")) %>% 
+  group_by(CasualtyClass) %>% 
+  summarise(Total = sum(Total))
+
+txt_driver <- data_temp %>% 
+  filter(CasualtyClass == "1 Driver/Rider") %>% 
+  select(Total) %>% 
+  pull()
+txt_pedestrian <- data_temp %>% 
+  filter(CasualtyClass == "3 Pedestrian") %>% 
+  select(Total) %>% 
+  pull()
+
+if (txt_driver > txt_pedestrian) {
+  txt_compare <- "more"
+} else if (txt_driver == txt_pedestrian) {
+  txt_compare <- "same"
+} else {
+  txt_compare <- "less"
+}
+  
+```
+
+In total, there are `r toString(txt_driver)` *Driver/Rider* people who either experienced a *fatal* or *serious* casualty. This figure was `r toString(txt_pedestrian)` for *Pedestrian*s. Therefore, there were `r toString(txt_compare)` *Driver/Rider* *fatal*/*serious* casualties relative to *Pedestrians*.
+
+
+### When do these casualties most frequently occur?
+In this part, we will look at the times and days that these casualties take place so we can understand what days and times are most likely to yield a casualty and thereby allowing the emergency services in the council to respond approrpriately.
+
+Looking at the plots below for each day, we learn that casulaties happen most likely around the periods:
+
+- **Monday**: it's around rush hour going to work time,
+- **Tuesday**: it's around rush hour going home time,
+- **Wednesday**: it's around the same but more accidents overall compared to previous two days
+- **Thursday** again around home time and less casualties than Wednesday
+- **Friday**: around late evening as people go out to club and drink (possibly this is where expect most casualties overall
+- **Saturday and Sunday**: is calmer, especially on Saturday morning as people nurse hangover.
+
+```{r (SHOW) When do these casualties occur - time-series, echo = FALSE}
+data_temp <- data_casualty %>% 
+  filter(CasualtyClass %in% c("1 Driver/Rider", "3 Pedestrian") & CasualtySeverity %in% c("1 Fatal", "2 Serious")) 
+
+ggplot(data = data_temp, mapping = aes(x = Time, colour = Day)) +
+  geom_freqpoly(binwidth = 0.1, show.legend = FALSE) +
+  facet_wrap(facets = vars(Day)) +
+  labs(title = "Line-Chart: Casualties across Days and Time",
+       x = "Time during the day",
+       y = "Count of casualties") +
+  plot_theme
+```
+
+### Where are these road casualties taking place?
+In this section, will visualise where the road casualties take place in Camden so one can identify hotpots of casualties that may need thorough investigation into.
+
+What we have below shows that down the centre of Camden, we have a higher concentration of casualties, suggesting more densely populated areas with drivers/riders and pedestrians.
+
+```{r (SHOW) Where are road casualties occurring, echo = FALSE}
+ggplot() + 
+  geom_polygon(data = shape_camden_data, mapping = aes(x = long, y = lat, group = group, fill = id)) +
+  geom_point(data = data_temp, mapping = aes(x = Longitude, y = Latitude)) +
+  coord_fixed(1.3) +
+  guides(fill = FALSE) +
+  # tried to add text of location but doesn't exist
+  #with(centroids, annotate(geom="text", x = long, y = lat, label=label, size=2)) +
+  labs(title = "Location of Fatal or Serious Casualties") +
+  theme_bare
+```
+
+### How did these casualties take place?
+In this section, will explore possible factors that can cause these casualties to occur.
+
+One suspects that Weather and RoadSurface intrinsically related so not going to include both together in analysis to avoid double-counting.
+
+From the plot below, the highest proportion of those suffering from **fatal** or **Serious** casualties went through *Fine* conditions during *Daylight* which corrobarates with what we found on all days except for Friday when the peak period when people would suffer from a casualty is after work during the rush hour back home.
+
+```{r (SHOW) How did casualties occur, echo = FALSE}
+data_temp <- data_temp %>% 
+  count(Weather, LightConditionBand) %>% 
+  mutate(Proportion = prop.table(n))
+
+ggplot(data = data_temp, mapping = aes(x = Weather, y = Proportion, fill = LightConditionBand, label = scales::percent(Proportion))) +
+  geom_col(position = "dodge") +
+  geom_text(position = position_dodge(width = .9),    # move to center of bars
+            vjust = -0.5,    # nudge above top of bar
+            size = 3) + 
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Proportion of Fatal or Serious Casualties \nby Weather and Light Band Condition") +
+  plot_theme
+```
+
