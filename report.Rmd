@@ -16,11 +16,19 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(results = "asis", warning = FALSE, message = FALSE)
 
+# Load packages
+library(dplyr)
+library(ggplot2)
+
 # Turn off scientific notation
 options(scipen = 999, expressions = 10000)
 
-# Load relevant packages
-library(readr)
+# Set theme for plots
+plot_theme <- theme(plot.title = element_text(face = "bold", hjust = 0.5),
+                    plot.subtitle = element_text(face = "bold", hjust = 0.5),
+                    panel.background = element_blank(),
+                    axis.line = element_line(color = "black"))
+
 ```
 
 # Section 1: Executive Summary
@@ -53,12 +61,41 @@ Note, as this is published to the public and from inspection, this data is alrea
 source("scripts/0_data_wrangle.R")
 ```
 
-## Including Plots
+## Section 3: Analysis
 
-You can also embed plots, for example:
+### Who are most involved in road casualties?
+We will begin by exploring the charateristics of those people who were involved in road casualties.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r (SHOW) Who are involved, echo = FALSE}
+plot_base <- ggplot(data = data_casualty, mapping = aes(x = ModeOfTravel, fill = CasualtySex)) +
+  labs(x = "Mode of Travel") +
+  plot_theme +
+  # add text-wrapping for x labels
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+From the bar-chart below, we see that *men* are involved in casualties relating to *Powered 2-wheeler* whereas *women* are involved in casualties
+
+```{r (SHOW) Who are involved - mode of travel, echo = FALSE}
+plot_base +
+  geom_bar(position = position_dodge()) +
+  labs(title = "Bar-Chart: Count of Road Casualties", 
+       subtitle = "by Mode of Travel and Sex",
+       y = "Count of casualties")
+```
+
+Let's drill-down further as we have age related information in the dataset.
+
+What we see in the box-plot is that for *fatal* casualties, they tend to be male who are younger than their female counterparts, on average. Yet the range of peoplee involved in a *fatal* road casualty has increased from youth not having.
+
+```{r (SHOW) Who are involved - age, echo = FALSE}
+ggplot(data = data_casualty, mapping = aes(x = CasualtySeverity, y = CasualtyAge, fill = CasualtySex)) +
+  geom_boxplot() +
+  labs(title = "Box-Plot: Severity of Casualty by Age",
+       x = "Severity of Casualty",
+       y = "Age of person involved in casualty") + 
+  plot_theme
+```
+
+### What types of casualties are most frequent?
+
