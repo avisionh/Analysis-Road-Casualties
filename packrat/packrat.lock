@@ -100,8 +100,8 @@ Hash: f147621f72b561485bfffcae78c4f5d5
 Package: ggplot2
 Source: CRAN
 Version: 3.2.1
-Requires: digest, gtable, lazyeval, reshape2, rlang, scales, tibble,
-    viridisLite, withr
+Requires: digest, gtable, lazyeval, rlang, viridisLite, withr, scales,
+    reshape2, tibble
 
 Package: glue
 Source: CRAN
@@ -179,7 +179,7 @@ Hash: 6ad605ba7b4b476d84be6632393f5765
 Package: pillar
 Source: CRAN
 Version: 1.4.2
-Requires: cli, crayon, fansi, rlang, utf8, vctrs
+Requires: crayon, fansi, rlang, utf8, cli, vctrs
 Hash: 28ff1862b4e0c8761efca442e80a63d8
 
 Package: pkgconfig
@@ -236,7 +236,7 @@ Hash: a25c3f70c166fb3fbabc410eb32b6366
 Package: scales
 Source: CRAN
 Version: 1.0.0
-Requires: R6, RColorBrewer, Rcpp, labeling, munsell, viridisLite
+Requires: R6, RColorBrewer, Rcpp, labeling, viridisLite, munsell
 
 Package: stringi
 Source: CRAN
@@ -252,7 +252,7 @@ Hash: 67da32dbb2a7a16f2ef124336358e54a
 Package: tibble
 Source: CRAN
 Version: 2.1.3
-Requires: cli, crayon, fansi, pillar, pkgconfig, rlang
+Requires: crayon, fansi, pkgconfig, rlang, cli, pillar
 Hash: f59680d81ddc45fa3fcb8c07686d1d89
 
 Package: tidyselect
@@ -275,7 +275,7 @@ Hash: f3f97ce59092abc8ed3fd098a59e236c
 Package: vctrs
 Source: CRAN
 Version: 0.2.0
-Requires: backports, digest, ellipsis, glue, rlang, zeallot
+Requires: backports, digest, glue, rlang, zeallot, ellipsis
 Hash: daf77cb3dbcacd7fb619cb3748dc215f
 
 Package: viridisLite

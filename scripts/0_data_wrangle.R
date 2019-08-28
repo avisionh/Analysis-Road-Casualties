@@ -14,17 +14,20 @@
 # NOTES: none
 # ------------------------------------------
 
+library(readr)
+library(dplyr)
+library(stringr)
 
 # Data Import -------------------------------------------------------------
-data_casualty <- read_csv(data = "data/Road_Collision_Casualties_In_Camden.csv")
+data_raw <- read_csv(file = "data/Road_Collision_Casualties_In_Camden.csv")
 
 
 # Data Wrangle ------------------------------------------------------------
 
-columnnames_old <- colnames(data_casualties)
+columnnames_old <- colnames(data_raw)
 columnnames_new <- str_replace_all(string = columnnames_old, pattern = " ", replacement = "")
 
-data_casualties_wrangled <- data_casualties %>% 
+data_casualty <- data_raw %>% 
   # convert all string to factors to make plotting easier
   mutate_if(.predicate = is.character, .funs = factor) %>%
   # convert ID field to string
@@ -44,3 +47,6 @@ data_casualties_wrangled <- data_casualties %>%
                              `5` = "Friday",
                              `6` = "Saturday",
                              `7` = "Sunday"))
+
+# keep environment clean
+rm(columnnames_old, columnnames_new)
