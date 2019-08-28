@@ -164,7 +164,8 @@ ggplot(data = data_temp, mapping = aes(x = Time, colour = Day)) +
   facet_wrap(facets = vars(Day)) +
   labs(title = "Line-Chart: Casualties across Days and Time",
        x = "Time during the day",
-       y = "Count ") +
+       y = "Count of casualties") +
   plot_theme
 ```
 
+### Where are these road casualties taking place?
