@@ -66,6 +66,8 @@ However, given that this data comes from a government body (technically MCHLG), 
 
 Additionally, the data is remarkably neat and adheres to tidy data principles, which suggests some processing was done in the background to format the data into something easy to consume for the public. This also suggests that some time was also spent in ensuring the data is as accurate as is feasibly possible.
 
+With more time, one would have liked to model the unknowns entries to see how many of these we have. They were not encoded consistently in the data. Moreover, one would have liked to explore population data for the borough alongside other similar boroughs to see how well their performance compares on road casualties.
+
 
 ```{r (HIDE) Data Preparation, echo = FALSE, include = FALSE}
 source("scripts/0_data_wrangle.R")
@@ -227,8 +229,8 @@ Following from the exploratory analysis, we found:
 1. Casting attention to the location of these fatal or serious casualties, most of them take place in the bottom centre of the Camden Borough of London. These aligns with the main throughfare of British Museum, British Library and Great Ormond Street hospital.
 1. Looking at the impact of the weather, it does not seem to have impacted the casualties too much as most casualties took place in *Fine* weather where there was *Daylight*.
 
-## Next Steps
-To take this analysis further, enough variables have been covered to provide a good starting point for choosing variables to include in a classification model to understand the groups of people more at risk of road casualties in the London Borough of Camden. These variables can be:
+## Next Steps - suggestions for data science techniques
+To take this analysis further, enough variables have been covered to provide a good starting point for choosing variables to include in a classification model such as k-nrearest neighbour to understand the groups of people more at risk of road casualties in the London Borough of Camden. These variables can be:
 
 - CasualtyClass
 - CasualtySex
