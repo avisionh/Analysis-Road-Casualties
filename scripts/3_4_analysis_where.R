@@ -23,16 +23,6 @@ shape_camden <- readOGR(dsn = "data/camden_ward_boundary/geo_export_43237533-e0f
 # convert to data frame
 shape_camden_data <- fortify(model = shape_camden)
 
-
-# Prepare Raw Plots -------------------------------------------------------
-map <- ggplot(data = shape_camden_data, mapping = aes(x = long, y = lat, group = group))
-
-map + 
-  geom_polygon(mapping = aes(fill = id)) +
-  coord_fixed(1.3) +
-  guides(fill = FALSE)
-
-
 # Prepare Data for Chloropleth --------------------------------------------
 centroids <- setNames(
   do.call("rbind.data.frame", 
@@ -54,13 +44,4 @@ theme_bare <- theme(
   panel.background = element_blank(),
   panel.border = element_rect(colour = "gray", fill=NA, size=0.5)
 )
-
-ggplot() + 
-  geom_polygon(data = shape_camden_data, mapping = aes(x = long, y = lat, group = group, fill = id)) +
-  geom_point(data = data_temp, mapping = aes(x = Longitude, y = Latitude)) +
-  coord_fixed(1.3) +
-  guides(fill = FALSE) +
-  # tried to add text of location but doesn't exist
-  #with(centroids, annotate(geom="text", x = long, y = lat, label=label, size=2)) +
-  theme_bare
 

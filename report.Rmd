@@ -60,6 +60,7 @@ The data comes from the data.gov.uk website [here](https://data.gov.uk/dataset/f
 Note, as this is published to the public and from inspection, this data is already in a *tidy* format so little wrangling needs to be done.
 ```{r (HIDE) Data Preparation, echo = FALSE, include = FALSE}
 source("scripts/0_data_wrangle.R")
+source("scripts/3_4_analysis_where.R")
 ```
 
 ## Section 3: Analysis
@@ -169,3 +170,19 @@ ggplot(data = data_temp, mapping = aes(x = Time, colour = Day)) +
 ```
 
 ### Where are these road casualties taking place?
+In this section, will visualise where the road casualties take place in Camden so one can identify hotpots of casualties that may need thorough investigation into.
+
+What we have below shows that down the centre of Camden, we have a higher concentration of casualties, suggesting more densely populated areas with drivers/riders and pedestrians.
+
+```{r (SHOW) Where are road casualties occurring, echo = FALSE}
+ggplot() + 
+  geom_polygon(data = shape_camden_data, mapping = aes(x = long, y = lat, group = group, fill = id)) +
+  geom_point(data = data_temp, mapping = aes(x = Longitude, y = Latitude)) +
+  coord_fixed(1.3) +
+  guides(fill = FALSE) +
+  # tried to add text of location but doesn't exist
+  #with(centroids, annotate(geom="text", x = long, y = lat, label=label, size=2)) +
+  labs(title = "Location of casualties") +
+  theme_bare
+```
+
