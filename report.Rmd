@@ -182,7 +182,29 @@ ggplot() +
   guides(fill = FALSE) +
   # tried to add text of location but doesn't exist
   #with(centroids, annotate(geom="text", x = long, y = lat, label=label, size=2)) +
-  labs(title = "Location of casualties") +
+  labs(title = "Location of Fatal or Serious Casualties") +
   theme_bare
+```
+
+### How did these casualties take place?
+In this section, will explore possible factors that can cause these casualties to occur.
+
+One suspects that Weather and RoadSurface intrinsically related so not going to include both together in analysis to avoid double-counting.
+
+From the plot below, the highest proportion of those suffering from **fatal** or **Serious** casualties went through *Fine* conditions during *Daylight* which corrobarates with what we found on all days except for Friday when the peak period when people would suffer from a casualty is after work during the rush hour back home.
+
+```{r (SHOW) How did casualties occur, echo = FALSE}
+data_temp <- data_temp %>% 
+  count(Weather, LightConditionBand) %>% 
+  mutate(Proportion = prop.table(n))
+
+ggplot(data = data_temp, mapping = aes(x = Weather, y = Proportion, fill = LightConditionBand, label = scales::percent(Proportion))) +
+  geom_col(position = "dodge") +
+  geom_text(position = position_dodge(width = .9),    # move to center of bars
+            vjust = -0.5,    # nudge above top of bar
+            size = 3) + 
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Proportion of Fatal or Serious Casualties \nby Weather and Light Band Condition") +
+  plot_theme
 ```
 

@@ -42,6 +42,7 @@ theme_bare <- theme(
   legend.text=element_text(size=7),
   legend.title=element_text(size=8),
   panel.background = element_blank(),
-  panel.border = element_rect(colour = "gray", fill=NA, size=0.5)
+  panel.border = element_rect(colour = "gray", fill=NA, size=0.5),
+  plot.title = element_text(face = "bold", hjust = 0.5)
 )
 
