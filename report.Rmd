@@ -19,6 +19,7 @@ knitr::opts_chunk$set(results = "asis", warning = FALSE, message = FALSE)
 # Load packages
 library(dplyr)
 library(ggplot2)
+library(pander)
 
 # Turn off scientific notation
 options(scipen = 999, expressions = 10000)
@@ -86,7 +87,7 @@ plot_base +
 
 Let's drill-down further as we have age related information in the dataset.
 
-What we see in the box-plot is that for *fatal* casualties, they tend to be male who are younger than their female counterparts, on average. Yet the range of peoplee involved in a *fatal* road casualty has increased from youth not having.
+What we see in the box-plot is that for *fatal* casualties, they tend to be male who are younger than their female counterparts, on average. Yet the range of ages of male involved in a *fatal* road casualty is higher than their female counterparts - this is opposite to what we see in the *serious* road casualty severity.
 
 ```{r (SHOW) Who are involved - age, echo = FALSE}
 ggplot(data = data_casualty, mapping = aes(x = CasualtySeverity, y = CasualtyAge, fill = CasualtySex)) +
@@ -98,4 +99,49 @@ ggplot(data = data_casualty, mapping = aes(x = CasualtySeverity, y = CasualtyAge
 ```
 
 ### What types of casualties are most frequent?
+We will now investigate what types of casualties are most frequent so we can understand the actual end-product which impacts on casualties. For instance, if cars were the most likely cause behind the casualties, then would recommend avoiding driving in a public safety campaign.
+
+From the table below, we see that for the *serious* and *fatal* severity casualties, the most frequent cases of these were from:
+
+- Driver/Rider
+- Pedestrian
+
+```{r (SHOW) What types of casualties - table, echo = FALSE}
+data_temp <- data_casualty %>% 
+  group_by(CasualtySeverity, CasualtyClass) %>% 
+  summarise(Total = n()) 
+
+data_temp %>% 
+  pander()
+```
+
+```{r (HIDE) What types of casulaties - words, include = FALSE, echo = FALSE}
+data_temp <- data_temp %>% 
+  filter(CasualtyClass %in% c("1 Driver/Rider", "3 Pedestrian") & CasualtySeverity %in% c("1 Fatal", "2 Serious")) %>% 
+  group_by(CasualtyClass) %>% 
+  summarise(Total = sum(Total))
+
+txt_driver <- data_temp %>% 
+  filter(CasualtyClass == "1 Driver/Rider") %>% 
+  select(Total) %>% 
+  pull()
+txt_pedestrian <- data_temp %>% 
+  filter(CasualtyClass == "3 Pedestrian") %>% 
+  select(Total) %>% 
+  pull()
+
+if (txt_driver > txt_pedestrian) {
+  txt_compare <- "more"
+} else if (txt_driver == txt_pedestrian) {
+  txt_compare <- "same"
+} else {
+  txt_compare <- "less"
+}
+  
+```
+
+In total, there are `r toString(txt_driver)` *Driver/Rider* people who either experienced a *fatal* or *serious* casualty. This figure was `r toString(txt_pedestrian)` for *Pedestrian*s. Therefore, there were `r toString(txt_compare)` *Driver/Rider* *fatal*/*serious* casualties relative to *Pedestrians*.
+
+
+### When do these casualties most frequent occur?
 
