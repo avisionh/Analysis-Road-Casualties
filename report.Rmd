@@ -57,7 +57,16 @@ The idea behind this exploratory analysis is to provide the platform for a class
 ## Data
 The data comes from the data.gov.uk website [here](https://data.gov.uk/dataset/f36669c1-fe1f-4cbc-803c-db49675247c3/road-collision-casualties-in-camden).
 
-Note, as this is published to the public and from inspection, this data is already in a *tidy* format so little wrangling needs to be done.
+This is open data as signalled by it being publicly available and having the open data license. 
+
+### Data Quality Assessment
+Owing to the nature of open data, then the expectation is that it will be of relatively poor quality and fairly messy. This is because oftentimes not as much effort is put into improving the standard, quality, accuracy and neatness of data available in the public domain.
+
+However, given that this data comes from a government body (technically MCHLG), then there is a minimum expectation that what's being publicly provided, whilst not to the same standard as a statistical publication, is of a sufficient quality to enable relatively better analysis compared to other open data sources.
+
+Additionally, the data is remarkably neat and adheres to tidy data principles, which suggests some processing was done in the background to format the data into something easy to consume for the public. This also suggests that some time was also spent in ensuring the data is as accurate as is feasibly possible.
+
+
 ```{r (HIDE) Data Preparation, echo = FALSE, include = FALSE}
 source("scripts/0_data_wrangle.R")
 source("scripts/3_4_analysis_where.R")
