@@ -1,0 +1,64 @@
+---
+title: 'Analysis: Road Casualties - Camden'
+author: "[Avision Ho](https://github.com/avisionh)"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    number_sections: false
+    theme: journal
+    highlight: haddock
+    code_folding: hide
+    fig_caption: true
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(results = "asis", warning = FALSE, message = FALSE)
+
+# Turn off scientific notation
+options(scipen = 999, expressions = 10000)
+
+# Load relevant packages
+library(readr)
+```
+
+# Section 1: Executive Summary
+
+# Section 2: Background
+
+## Introduction
+The purpose of this project is to explore the road casualty data publicly available for the London borough of Camden.
+
+## Motivation
+By exploring the data, we hope to identify and understand the following:
+
+1. **Who** are most involved in road casualties
+
+1. **What** types of casualties are most frequent, including their severity
+
+1. **When** these casualties often occur 
+
+1. **Where** road casualties take place
+
+1. **How** these casualties take place, including weather conditions
+
+The idea behind this exploratory analysis is to provide the platform for a classification model to be built to better understand who, what, when, where and how these casualties take place so more effective campaigns can be delivered by the local council to reduce casualties as well as identifying *hotspots* for where casualties most likely happen so that work such as building works to improve the roads, can be done by the council.
+
+## Data
+The data comes from the data.gov.uk website [here](https://data.gov.uk/dataset/f36669c1-fe1f-4cbc-803c-db49675247c3/road-collision-casualties-in-camden).
+
+Note, as this is published to the public and from inspection, this data is already in a *tidy* format so little wrangling needs to be done.
+```{r (HIDE) Data Preparation, echo = FALSE, include = FALSE}
+data_roadcasualties <- read_csv(file = "data/Road_Collision_Casualties_In_Camden.csv")
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
